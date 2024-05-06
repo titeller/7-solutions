@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { defaultDelayToTriggerBack } from '@src/shareds/constants/config';
 import { enumButtonType } from '@src/shareds/constants/enum';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IProps {
     label: string | JSX.Element;
@@ -10,7 +10,7 @@ interface IProps {
     isTriggerBack?: boolean;
     delayToTriggerBack?: number;
     onTriggerBack?: () => void;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    onClick?: () => void;
 }
 
 export default function Button({
@@ -22,13 +22,27 @@ export default function Button({
     onTriggerBack,
     onClick,
 }: IProps) {
+    let triggerBackTimer: NodeJS.Timeout | null = null;
+
     useEffect(() => {
-        if (isTriggerBack && typeof onTriggerBack != 'undefined') {
-            setTimeout(() => {
+        triggerBackTimer = setTimeout(() => {
+            if (isTriggerBack && typeof onTriggerBack != 'undefined') {
                 onTriggerBack();
-            }, delayToTriggerBack);
+            }
+        }, delayToTriggerBack);
+        
+        return () =>
+            clearTimeout(triggerBackTimer as NodeJS.Timeout);
+    }, []);
+
+    const handleOnClick = () => {
+        if (typeof onClick !== 'undefined') {
+            if (isTriggerBack) {
+                clearTimeout(triggerBackTimer as NodeJS.Timeout);
+            }
+            onClick();
         }
-    }, [isTriggerBack, delayToTriggerBack, onTriggerBack]);
+    };
 
     const buttonClassNameDefault = 'border border-slate-300 px-2 py-1 rounded-sm bg-white hover:bg-slate-100';
     const buttonClassName = buttonClassCustomized
@@ -37,7 +51,7 @@ export default function Button({
     return (
         <button
             type={type}
-            onClick={onClick}
+            onClick={handleOnClick}
             className={buttonClassName}
         >
             {label}
