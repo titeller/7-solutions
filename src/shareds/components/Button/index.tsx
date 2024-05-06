@@ -28,7 +28,7 @@ export default function Button({
                 onTriggerBack();
             }, delayToTriggerBack);
         }
-    }, []);
+    }, [isTriggerBack, delayToTriggerBack, onTriggerBack]);
 
     const buttonClassNameDefault = 'border border-slate-300 px-2 py-1 rounded-sm bg-white hover:bg-slate-100';
     const buttonClassName = buttonClassCustomized
