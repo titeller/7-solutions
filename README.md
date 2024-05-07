@@ -1,4 +1,4 @@
-This is my assignment for front-end Auto Delete Todo List.
+This is my assignment for front-end Auto Delete Todo List by using NextJS and TailwindCSS.
 
 ## Features 
 
